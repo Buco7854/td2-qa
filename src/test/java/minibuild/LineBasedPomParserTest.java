@@ -40,4 +40,11 @@ class LineBasedPomParserTest {
         assertEquals(new Project("mon-app", Set.of(a)),
             parser.parse(lines("project mon-app", "dependency " + a, null)));
     }
+
+    @Test
+    void plusieursDependancesEtLignesVides() throws Exception {
+        // [ILineReader | lignes du projet, a, ligne vide, b, ⊥]s ⊢ parse(reader) ⇒ Project("mon-app", {a,b})
+        assertEquals(new Project("mon-app", Set.of(a, b)),
+            parser.parse(lines("", "project mon-app", "dependency " + a, " ", "dependency " + b, null)));
+    }
 }
