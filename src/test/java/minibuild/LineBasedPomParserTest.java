@@ -47,4 +47,25 @@ class LineBasedPomParserTest {
         assertEquals(new Project("mon-app", Set.of(a, b)),
             parser.parse(lines("", "project mon-app", "dependency " + a, " ", "dependency " + b, null)));
     }
+
+    @Test
+    void ligneInconnue() throws Exception {
+        // [ILineReader | projet, ligne inconnue, ⊥]s ⊢ parse(reader) ⇒ ↯ IllegalArgumentException
+        assertThrows(IllegalArgumentException.class,
+            () -> parser.parse(lines("project mon-app", "unknown autre", null)));
+    }
+
+    @Test
+    void ligneInconnueAvantLeProjet() throws Exception {
+        // [ILineReader | ligne inconnue, ⊥]s ⊢ parse(reader) ⇒ ↯ IllegalArgumentException
+        assertThrows(IllegalArgumentException.class,
+            () -> parser.parse(lines("unknown autre", null)));
+    }
+
+    @Test
+    void coordonneeInvalide() throws Exception {
+        // [ILineReader | projet, dépendance invalide, ⊥]s ⊢ parse(reader) ⇒ ↯ IllegalArgumentException
+        assertThrows(IllegalArgumentException.class,
+            () -> parser.parse(lines("project mon-app", "dependency mauvais", null)));
+    }
 }
