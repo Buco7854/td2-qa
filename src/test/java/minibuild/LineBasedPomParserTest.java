@@ -27,4 +27,10 @@ class LineBasedPomParserTest {
         // [ILineReader | readLine ↦ ⊥]s ⊢ parse(reader) ⇒ ↯ IllegalArgumentException
         assertThrows(IllegalArgumentException.class, () -> parser.parse(lines((String) null)));
     }
+
+    @Test
+    void projetSeul() throws Exception {
+        // [ILineReader | readLine ↦ ⟨"project mon-app", ⊥⟩]s ⊢ parse(reader) ⇒ Project("mon-app", ∅)
+        assertEquals(new Project("mon-app", Set.of()), parser.parse(lines("project mon-app", null)));
+    }
 }
