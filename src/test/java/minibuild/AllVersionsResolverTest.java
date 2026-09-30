@@ -35,4 +35,14 @@ class AllVersionsResolverTest {
         assertEquals(Set.of(a, b, c), result);
         assertThat(result, containsInAnyOrder(a, b, c));
     }
+
+    @Test
+    void interrogeChaqueCoordonneeUneSeuleFois() {
+        // [IRegistry | chaîne a→b→c, appels enregistrés]sp ⊢ resolve({a}) ⇒ lookup(a,b,c) ×1 chacun
+        IRegistry registry = chain(false);
+        new AllVersionsResolver(registry).resolve(Set.of(a));
+        verify(registry, times(1)).lookup(a);
+        verify(registry, times(1)).lookup(b);
+        verify(registry, times(1)).lookup(c);
+    }
 }
