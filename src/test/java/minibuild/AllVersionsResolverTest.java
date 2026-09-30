@@ -45,4 +45,14 @@ class AllVersionsResolverTest {
         verify(registry, times(1)).lookup(b);
         verify(registry, times(1)).lookup(c);
     }
+
+    @Test
+    void cycleSansBoucleInfinie() {
+        // [IRegistry | chaîne a→b→c→a, appels enregistrés]sp ⊢ resolve({a}) ⇒ {a,b,c}, lookup ×1 chacun
+        IRegistry registry = chain(true);
+        assertEquals(Set.of(a, b, c), new AllVersionsResolver(registry).resolve(Set.of(a)));
+        verify(registry, times(1)).lookup(a);
+        verify(registry, times(1)).lookup(b);
+        verify(registry, times(1)).lookup(c);
+    }
 }
