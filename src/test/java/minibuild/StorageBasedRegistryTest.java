@@ -65,4 +65,32 @@ class StorageBasedRegistryTest {
         assertThrows(AlreadyPublishedException.class, () -> registry.publish(artifact));
         assertEquals(0, storage.writes);
     }
+
+    @Test
+    void publieEtRechercheAvecMockito() {
+        // [IStorage | get(a) ↦ ∅ puis A]s, put(a,A) observé ⊢ publish(A); lookup(a) ⇒ A
+        IStorage storage = mock(IStorage.class);
+        when(storage.get(a)).thenReturn(Optional.empty()).thenReturn(Optional.of(artifact));
+        IRegistry registry = new StorageBasedRegistry(storage);
+        registry.publish(artifact);
+        assertEquals(Optional.of(artifact), registry.lookup(a));
+        verify(storage).put(a, artifact);
+    }
+
+    @Test
+    void refuseUneRepublicationAvecMockito() {
+        // [IStorage | get(a) ↦ A]s, put(a,A) observé ⊢ publish(A) ⇒ ↯ AlreadyPublishedException et put ×0
+        IStorage storage = mock(IStorage.class);
+        when(storage.get(a)).thenReturn(Optional.of(artifact));
+        IRegistry registry = new StorageBasedRegistry(storage);
+        assertThrows(AlreadyPublishedException.class, () -> registry.publish(artifact));
+        verify(storage, never()).put(a, artifact);
+    }
+
+    @Test
+    void rechercheAbsente() {
+        IStorage storage = mock(IStorage.class);
+        when(storage.get(a)).thenReturn(Optional.empty());
+        assertTrue(new StorageBasedRegistry(storage).lookup(a).isEmpty());
+    }
 }
