@@ -55,4 +55,12 @@ class AllVersionsResolverTest {
         verify(registry, times(1)).lookup(b);
         verify(registry, times(1)).lookup(c);
     }
+
+    @Test
+    void dependanceAbsente() {
+        IRegistry registry = mock(IRegistry.class);
+        when(registry.lookup(a)).thenReturn(Optional.empty());
+        assertThrows(MissingArtifactException.class,
+            () -> new AllVersionsResolver(registry).resolve(Set.of(a)));
+    }
 }
