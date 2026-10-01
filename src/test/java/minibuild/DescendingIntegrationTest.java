@@ -51,4 +51,15 @@ class DescendingIntegrationTest {
         assertEquals(Set.of(a, b),
             new BuildTool(parser, new AllVersionsResolver(registry)).build(realReader()));
     }
+
+    @Test
+    void etape4_ajoutDuRegistre() throws Exception {
+        // Interface IResolver → IRegistry ; IStorage fournit les artefacts.
+        IStorage storage = mock(IStorage.class);
+        when(storage.get(a)).thenReturn(Optional.of(new Artifact(a, Set.of(b))));
+        when(storage.get(b)).thenReturn(Optional.of(new Artifact(b, Set.of())));
+        IRegistry registry = new StorageBasedRegistry(storage);
+        assertEquals(Set.of(a, b),
+            new BuildTool(parser, new AllVersionsResolver(registry)).build(realReader()));
+    }
 }
