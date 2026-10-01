@@ -20,7 +20,7 @@ public class AllVersionsResolver implements IResolver {
             Gav gav = pending.removeFirst();
             if (visited.add(gav)) {
                 Artifact artifact = registry.lookup(gav)
-                    .orElseThrow();
+                    .orElseThrow(() -> new MissingArtifactException(gav));
                 pending.addAll(artifact.dependencies());
             }
         }
