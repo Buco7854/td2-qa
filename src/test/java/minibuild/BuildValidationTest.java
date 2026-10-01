@@ -38,4 +38,14 @@ class BuildValidationTest {
     void resoutUnVraiFichierEtSesDependancesTransitives() throws Exception {
         assertThat(build("/build-valid.txt", registry()), containsInAnyOrder(a, b, c));
     }
+
+    @Test
+    void signaleUneDependanceAbsente() {
+        assertThrows(MissingArtifactException.class, () -> build("/build-missing.txt", registry()));
+    }
+
+    @Test
+    void signaleUneSyntaxeInvalide() {
+        assertThrows(IllegalArgumentException.class, () -> build("/build-invalid.txt", registry()));
+    }
 }
