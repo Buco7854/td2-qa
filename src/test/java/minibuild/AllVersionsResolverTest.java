@@ -57,10 +57,24 @@ class AllVersionsResolverTest {
     }
 
     @Test
+    void conserveDeuxVersionsDuMemeArtefact() {
+        Gav other = Gav.parse("org.acme:lib-a:2.0.0");
+        IRegistry registry = mock(IRegistry.class);
+        when(registry.lookup(a)).thenReturn(Optional.of(new Artifact(a, Set.of(other))));
+        when(registry.lookup(other)).thenReturn(Optional.of(new Artifact(other, Set.of())));
+        assertEquals(Set.of(a, other), new AllVersionsResolver(registry).resolve(Set.of(a)));
+    }
+
+    @Test
     void dependanceAbsente() {
         IRegistry registry = mock(IRegistry.class);
         when(registry.lookup(a)).thenReturn(Optional.empty());
         assertThrows(MissingArtifactException.class,
             () -> new AllVersionsResolver(registry).resolve(Set.of(a)));
+    }
+
+    @Test
+    void aucuneDependance() {
+        assertEquals(Set.of(), new AllVersionsResolver(mock(IRegistry.class)).resolve(Set.of()));
     }
 }

@@ -11,7 +11,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 class AscendingIntegrationTest {
     @Test
     void etape1_piloteDuRegistreEtDuStockage() {
-        // Le test pilote IRegistry ; interface IRegistry → IStorage réelle.
+        // Le test pilote IRegistry. L'interface IRegistry → IStorage est réelle.
         Gav a = Gav.parse("org.acme:lib-a:1.0.0");
         Artifact artifact = new Artifact(a, Set.of());
         IRegistry registry = new StorageBasedRegistry(new InMemoryStorage());

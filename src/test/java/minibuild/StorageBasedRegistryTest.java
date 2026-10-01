@@ -68,7 +68,7 @@ class StorageBasedRegistryTest {
 
     @Test
     void publieEtRechercheAvecMockito() {
-        // [IStorage | get(a) ↦ ∅ puis A]s, put(a,A) observé ⊢ publish(A); lookup(a) ⇒ A
+        // [IStorage | get(a) ↦ ∅ puis A]s, put(a,A) observé ⊢ publish(A), puis lookup(a) ⇒ A
         IStorage storage = mock(IStorage.class);
         when(storage.get(a)).thenReturn(Optional.empty()).thenReturn(Optional.of(artifact));
         IRegistry registry = new StorageBasedRegistry(storage);

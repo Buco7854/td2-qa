@@ -25,7 +25,7 @@ class DescendingIntegrationTest {
 
     @Test
     void etape1_buildToolEtParser() throws Exception {
-        // Interface BuildTool → IPomParser ; ILineReader et IResolver sont bouchonnés.
+        // Interface BuildTool → IPomParser. ILineReader et IResolver sont bouchonnés.
         ILineReader reader = mock(ILineReader.class);
         when(reader.readLine()).thenReturn("project mon-app", "dependency " + a, null);
         IResolver resolver = mock(IResolver.class);
@@ -36,7 +36,7 @@ class DescendingIntegrationTest {
 
     @Test
     void etape2_ajoutDuLecteur() throws Exception {
-        // Interface IPomParser → ILineReader ; seul IResolver reste bouchonné.
+        // Interface IPomParser → ILineReader. Seul IResolver reste bouchonné.
         IResolver resolver = mock(IResolver.class);
         when(resolver.resolve(Set.of(a))).thenReturn(Set.of(a));
         assertEquals(Set.of(a), new BuildTool(parser, resolver).build(realReader()));
@@ -44,7 +44,7 @@ class DescendingIntegrationTest {
 
     @Test
     void etape3_ajoutDuResolveur() throws Exception {
-        // Interface BuildTool → IResolver ; IRegistry fournit une chaîne a → b.
+        // Interface BuildTool → IResolver. IRegistry fournit une chaîne a → b.
         IRegistry registry = mock(IRegistry.class);
         when(registry.lookup(a)).thenReturn(Optional.of(new Artifact(a, Set.of(b))));
         when(registry.lookup(b)).thenReturn(Optional.of(new Artifact(b, Set.of())));
@@ -54,7 +54,7 @@ class DescendingIntegrationTest {
 
     @Test
     void etape4_ajoutDuRegistre() throws Exception {
-        // Interface IResolver → IRegistry ; IStorage fournit les artefacts.
+        // Interface IResolver → IRegistry. IStorage fournit les artefacts.
         IStorage storage = mock(IStorage.class);
         when(storage.get(a)).thenReturn(Optional.of(new Artifact(a, Set.of(b))));
         when(storage.get(b)).thenReturn(Optional.of(new Artifact(b, Set.of())));
@@ -65,7 +65,7 @@ class DescendingIntegrationTest {
 
     @Test
     void etape5_ajoutDuStockage() throws Exception {
-        // Interface IRegistry → IStorage ; les six composants sont réels.
+        // Interface IRegistry → IStorage. Les six composants sont réels.
         IRegistry registry = new StorageBasedRegistry(new InMemoryStorage());
         registry.publish(new Artifact(a, Set.of(b)));
         registry.publish(new Artifact(b, Set.of()));
