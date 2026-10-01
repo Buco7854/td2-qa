@@ -41,4 +41,14 @@ class DescendingIntegrationTest {
         when(resolver.resolve(Set.of(a))).thenReturn(Set.of(a));
         assertEquals(Set.of(a), new BuildTool(parser, resolver).build(realReader()));
     }
+
+    @Test
+    void etape3_ajoutDuResolveur() throws Exception {
+        // Interface BuildTool → IResolver ; IRegistry fournit une chaîne a → b.
+        IRegistry registry = mock(IRegistry.class);
+        when(registry.lookup(a)).thenReturn(Optional.of(new Artifact(a, Set.of(b))));
+        when(registry.lookup(b)).thenReturn(Optional.of(new Artifact(b, Set.of())));
+        assertEquals(Set.of(a, b),
+            new BuildTool(parser, new AllVersionsResolver(registry)).build(realReader()));
+    }
 }
