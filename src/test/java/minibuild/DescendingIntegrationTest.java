@@ -33,4 +33,12 @@ class DescendingIntegrationTest {
         assertEquals(Set.of(a), new BuildTool(parser, resolver).build(reader));
         verify(resolver).resolve(Set.of(a));
     }
+
+    @Test
+    void etape2_ajoutDuLecteur() throws Exception {
+        // Interface IPomParser → ILineReader ; seul IResolver reste bouchonné.
+        IResolver resolver = mock(IResolver.class);
+        when(resolver.resolve(Set.of(a))).thenReturn(Set.of(a));
+        assertEquals(Set.of(a), new BuildTool(parser, resolver).build(realReader()));
+    }
 }
