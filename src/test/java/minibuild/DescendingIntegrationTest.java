@@ -62,4 +62,14 @@ class DescendingIntegrationTest {
         assertEquals(Set.of(a, b),
             new BuildTool(parser, new AllVersionsResolver(registry)).build(realReader()));
     }
+
+    @Test
+    void etape5_ajoutDuStockage() throws Exception {
+        // Interface IRegistry → IStorage ; les six composants sont réels.
+        IRegistry registry = new StorageBasedRegistry(new InMemoryStorage());
+        registry.publish(new Artifact(a, Set.of(b)));
+        registry.publish(new Artifact(b, Set.of()));
+        assertEquals(Set.of(a, b),
+            new BuildTool(parser, new AllVersionsResolver(registry)).build(realReader()));
+    }
 }
